@@ -106,6 +106,7 @@
     pkgs.appimage-run
     pkgs.cargo
     pkgs.cowsay
+    pkgs.gnomeExtensions.custom-accent-colors
     pkgs.discord
     pkgs.distrobox
     pkgs.libsForQt5.elisa
@@ -165,10 +166,13 @@
   #My Services!
   services.flatpak.enable = true;
   services.fwupd.enable = true;
+  
+  #wireguard
+  networking.firewall.checkReversePath = false; 
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [...];
-  # networking.firewall.allowedUDPPorts = [...];
+    networking.firewall.allowedUDPPorts = [51820];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
   #Open ports in a specific range
