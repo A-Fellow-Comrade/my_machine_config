@@ -1,4 +1,4 @@
-# My Nix Config File that is cool
+ # My Nix Config File that is cool
 
 
 { config, pkgs, ... }:
@@ -15,8 +15,10 @@
   
   #Network Fun Stuff
   networking.hostName = "nixos";
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  #networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
+  networking.networkmanager.dns = "none";
+  networking.nameservers = [ "127.0.0.1"];
 
   # Timezone for me
   time.timeZone = "America/Los_Angeles";
@@ -84,6 +86,11 @@
     ibus.engines = with pkgs.ibus-engines; [ libpinyin ];
   };
 
+  #Chinese Fonts
+  fonts.fonts = with pkgs; [
+    source-han-serif
+  ];
+
   #My User
   users.users.tux = {
     isNormalUser = true;
@@ -103,13 +110,14 @@
     pkgs.alsa-firmware
     pkgs.sof-firmware
     pkgs.android-studio
+    pkgs.android-tools
     pkgs.appimage-run
     pkgs.cargo
     pkgs.cowsay
     pkgs.gnomeExtensions.custom-accent-colors
     pkgs.discord
     pkgs.distrobox
-    pkgs.libsForQt5.elisa
+    pkgs.dnscrypt-proxy2
     pkgs.firefox
     pkgs.fprintd
     pkgs.gcc
@@ -144,6 +152,7 @@
     pkgs.sniffnet
     pkgs.steghide
     pkgs.stegseek
+    pkgs.stubby
     pkgs.tor-browser-bundle-bin
     pkgs.vlc
     pkgs.wget
@@ -166,7 +175,31 @@
   #My Services!
   services.flatpak.enable = true;
   services.fwupd.enable = true;
-  
+
+  #DNS
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+	refresh_delay = 72;
+      };
+
+       server_names = [ "cloudflare" "cloudflare-ipv6" ];
+    };
+  };
+
+  systemd.services.dnscrypt-proxy2.serviceConfig = {
+    StateDirectory = "dnscrypt-proxy";
+  };
   #wireguard
   networking.firewall.checkReversePath = false; 
 
