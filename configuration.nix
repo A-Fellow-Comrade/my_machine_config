@@ -108,6 +108,7 @@
   #My Packages!!
   environment.systemPackages = with pkgs; [
     pkgs.alsa-firmware
+    pkgs.ardour
     pkgs.sof-firmware
     pkgs.android-studio
     pkgs.android-tools
@@ -193,7 +194,7 @@
 	refresh_delay = 72;
       };
 
-       server_names = [ "cloudflare" "cloudflare-ipv6" ];
+       server_names = [ "cloudflare" ];
     };
   };
 
